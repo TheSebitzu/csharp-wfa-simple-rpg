@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRPG", "SimpleRPG\SimpleRPG.csproj", "{81CF1CB5-462F-4211-A2B0-03D8CF0BC629}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csproj", "{586370CB-7AC0-4C4F-98E5-73E5F71ACD75}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81CF1CB5-462F-4211-A2B0-03D8CF0BC629}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81CF1CB5-462F-4211-A2B0-03D8CF0BC629}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81CF1CB5-462F-4211-A2B0-03D8CF0BC629}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81CF1CB5-462F-4211-A2B0-03D8CF0BC629}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586370CB-7AC0-4C4F-98E5-73E5F71ACD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{586370CB-7AC0-4C4F-98E5-73E5F71ACD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{586370CB-7AC0-4C4F-98E5-73E5F71ACD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{586370CB-7AC0-4C4F-98E5-73E5F71ACD75}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5144C2B3-C8BC-4676-84D8-F63431044DB2}
+	EndGlobalSection
+EndGlobal
