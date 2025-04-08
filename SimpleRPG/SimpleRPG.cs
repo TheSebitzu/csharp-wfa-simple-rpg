@@ -1,6 +1,7 @@
 ﻿using Engine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Windows.Forms;
 
@@ -284,12 +285,9 @@ namespace SimpleRPG
 
             dgvInventory.Rows.Clear();
 
-            foreach (InventoryItem inventoryItem in _player.Inventory)
+            foreach (InventoryItem inventoryItem in _player.Inventory.Where(item => item.Quantity > 0))
             {
-                if (inventoryItem.Quantity > 0)
-                {
-                    dgvInventory.Rows.Add(new[] { inventoryItem.Details.Name, inventoryItem.Quantity.ToString() });
-                }
+                dgvInventory.Rows.Add(new[] { inventoryItem.Details.Name, inventoryItem.Quantity.ToString() });
             }
         }
 
@@ -345,15 +343,10 @@ namespace SimpleRPG
         {
             List<HealingPotion> healingPotions = new List<HealingPotion>();
 
-            foreach (InventoryItem inventoryItem in _player.Inventory)
+            foreach (InventoryItem inventoryItem in _player.Inventory.Where(item => 
+            item.Details is HealingPotion && item.Quantity >0))
             {
-                if (inventoryItem.Details is HealingPotion)
-                {
-                    if (inventoryItem.Quantity > 0)
-                    {
-                        healingPotions.Add((HealingPotion)inventoryItem.Details);
-                    }
-                }
+                healingPotions.Add((HealingPotion)inventoryItem.Details);
             }
 
             if (healingPotions.Count == 0)
