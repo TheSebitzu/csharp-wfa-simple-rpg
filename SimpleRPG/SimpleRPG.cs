@@ -61,6 +61,7 @@ namespace SimpleRPG
 
             // Display message
             rtbMessages.Text += "You hit the " + _currentMonster.Name + " for " + damageToDeal.ToString() + " points." + Environment.NewLine;
+            ScrollToBottomOfMessages();
 
             // Check monster is dead
             if (_currentMonster.CurrentHitPoints <= 0)
@@ -76,6 +77,7 @@ namespace SimpleRPG
                 // Write in rtb
                 rtbMessages.Text += "You receive " + _currentMonster.RewardExperiencePoints.ToString() + " experience points" + Environment.NewLine;
                 rtbMessages.Text += "You receive " + _currentMonster.RewardGold.ToString() + " gold" + Environment.NewLine;
+                ScrollToBottomOfMessages();
 
                 // Looted items
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
@@ -105,12 +107,15 @@ namespace SimpleRPG
                     _player.AddItemToInventory(item.Details);
                     var name = item.Quantity == 1 ? item.Details.Name : item.Details.NamePlural;
                     rtbMessages.Text += "You loot " + item.Quantity.ToString() + " " + name + Environment.NewLine;
-                }    
+                    ScrollToBottomOfMessages();
+                }
 
                 RefreshAll();
 
                 // Enter so it looks good
                 rtbMessages.Text += Environment.NewLine;
+                ScrollToBottomOfMessages();
+
 
                 // Doesnt actually move the player
                 // Heals the player and creates new monster
@@ -143,6 +148,8 @@ namespace SimpleRPG
             }
             // Display mesage
             rtbMessages.Text += "You drink a " + potion.Name + Environment.NewLine;
+            ScrollToBottomOfMessages();
+
 
             CurrentMonsterAttack();
 
@@ -155,6 +162,7 @@ namespace SimpleRPG
             if (!_player.HasRequiredItemToEnterThisLocation(newLocation))
             {
                 rtbMessages.Text += "You must have a " + newLocation.ItemRequiredToEnter.Name + " to enter this location." + Environment.NewLine;
+                ScrollToBottomOfMessages();
                 return;
             }
 
@@ -170,6 +178,8 @@ namespace SimpleRPG
             // Display current location name and description
             rtbLocation.Text = newLocation.Name + Environment.NewLine;
             rtbLocation.Text += newLocation.Description + Environment.NewLine;
+            ScrollToBottomOfMessages();
+
 
             // Heal the player to full
             _player.CurrentHitPoints = _player.MaximumHitPoints;
@@ -196,6 +206,7 @@ namespace SimpleRPG
                             // Display message
                             rtbMessages.Text += Environment.NewLine;
                             rtbMessages.Text += "You complete the '" + questInCurrentLocation.Name + "' quest." + Environment.NewLine;
+                            ScrollToBottomOfMessages();
 
                             // Remove quest items from inventory
                             _player.RemoveQuestCompletionItems(questInCurrentLocation);
@@ -226,6 +237,7 @@ namespace SimpleRPG
                         
                     }
                     rtbMessages.Text += Environment.NewLine;
+                    ScrollToBottomOfMessages();
 
                     // Add the quest to the player's quest list
                     _player.Quests.Add(new PlayerQuest(questInCurrentLocation));
@@ -236,6 +248,7 @@ namespace SimpleRPG
             if (newLocation.MonsterLivingHere != null)
             {
                 rtbMessages.Text += "You see a " + newLocation.MonsterLivingHere.Name + Environment.NewLine;
+                ScrollToBottomOfMessages();
 
                 // Make a new monster, using the values from the standard monster in the World.Monster list
                 Monster monster = World.MonsterByID(newLocation.MonsterLivingHere.Id);
@@ -366,6 +379,7 @@ namespace SimpleRPG
             rtbMessages.Text += quest.RewardGold.ToString() + " gold" + Environment.NewLine;
             rtbMessages.Text += quest.RewardItem.Name + Environment.NewLine;
             rtbMessages.Text += Environment.NewLine;
+            ScrollToBottomOfMessages();
 
             _player.ExperiencePoints += quest.RewardExperiencePoints;
             _player.Gold += quest.RewardGold;
@@ -399,6 +413,7 @@ namespace SimpleRPG
 
             // Display message
             rtbMessages.Text += "The " + _currentMonster.Name + " did " + monsterDamage.ToString() + " points of damage." + Environment.NewLine;
+            ScrollToBottomOfMessages();
 
             // Subtract damage from player
             _player.CurrentHitPoints -= monsterDamage;
@@ -410,6 +425,7 @@ namespace SimpleRPG
                 // Display message
                 rtbMessages.Text = "The " + _currentMonster.Name + " did " + monsterDamage.ToString() + " points of damage." + Environment.NewLine;
                 rtbMessages.Text = "The " + _currentMonster.Name + " killed you." + Environment.NewLine + "You died" + Environment.NewLine;
+                ScrollToBottomOfMessages();
 
                 // Move player to "Home"
                 MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
@@ -417,6 +433,12 @@ namespace SimpleRPG
 
             // Update UI
             RefreshAll();
+        }
+
+        private void ScrollToBottomOfMessages()
+        {
+            rtbMessages.SelectionStart = rtbMessages.Text.Length;
+            rtbMessages.ScrollToCaret();
         }
     }
 }
