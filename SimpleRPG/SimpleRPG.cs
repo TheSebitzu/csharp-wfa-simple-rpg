@@ -16,7 +16,7 @@ namespace SimpleRPG
             InitializeComponent();
 
             // Create player
-            _player = new Player(10, 10, 20, 0, 1);
+            _player = new Player(10, 10, 20, 0);
 
             // Start at home
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
@@ -73,6 +73,7 @@ namespace SimpleRPG
                 // Give gold and xp
                 _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
                 _player.Gold += _currentMonster.RewardGold;
+                RefreshAll();
 
                 // Write in rtb
                 rtbMessages.Text += "You receive " + _currentMonster.RewardExperiencePoints.ToString() + " experience points" + Environment.NewLine;
@@ -135,9 +136,10 @@ namespace SimpleRPG
 
             // Heal player
             _player.CurrentHitPoints = Math.Min(_player.CurrentHitPoints + potion.AmountToHeal, _player.MaximumHitPoints);
+            RefreshAll();
 
             // Remove potion
-            foreach(InventoryItem item in _player.Inventory)
+            foreach (InventoryItem item in _player.Inventory)
             {
                 if(item.Details.Id == potion.Id)
                 {
@@ -185,8 +187,6 @@ namespace SimpleRPG
             _player.CurrentHitPoints = _player.MaximumHitPoints;
             RefreshAll();
 
-            // Update HP in UI
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
 
             Quest questInCurrentLocation = newLocation.QuestAvailableHere;
 
@@ -383,6 +383,7 @@ namespace SimpleRPG
 
             _player.ExperiencePoints += quest.RewardExperiencePoints;
             _player.Gold += quest.RewardGold;
+            RefreshAll();
         }
 
         private void ShowCombat(bool state)
@@ -417,6 +418,7 @@ namespace SimpleRPG
 
             // Subtract damage from player
             _player.CurrentHitPoints -= monsterDamage;
+            RefreshAll();
 
 
             // Check if player is dead
