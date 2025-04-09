@@ -1,8 +1,8 @@
 ﻿using Engine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Windows.Forms;
 
 namespace SimpleRPG
@@ -11,19 +11,23 @@ namespace SimpleRPG
     {
         private Player _player;
         private Monster _currentMonster;
+        private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
 
         public SimpleRPG()
         {
             InitializeComponent();
+            
+            if (File.Exists(PLAYER_DATA_FILE_NAME))
+            {
+                _player = Player.CreatePlayerFromXmlString(File.ReadAllText(PLAYER_DATA_FILE_NAME));
+            }
+            else
+            {
+                _player = Player.CreateDefaultPlayer();
+            }
 
-            // Create player
-            _player = new Player(10, 10, 20, 0);
-
-            // Start at home
-            MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
-
-            // Give the player a sword
-            _player.Inventory.Add(new InventoryItem(World.ItemByID(World.ITEM_ID_RUSTY_SWORD), 1));
+            // Get the player healed and to current location
+            MoveTo(_player.CurrentLocation);
 
             // Populate the labels with info
             RefreshAll();
@@ -83,7 +87,7 @@ namespace SimpleRPG
 
                 // Looted items
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
-                foreach(LootItem item in _currentMonster.LootTable)
+                foreach (LootItem item in _currentMonster.LootTable)
                 {
                     if (RandomNumberGenerator.NumberBetween(1, 100) <= item.DropPercentage)
                     {
@@ -104,7 +108,7 @@ namespace SimpleRPG
                 }
 
                 // Add items to inventory
-                foreach(InventoryItem item in  lootedItems)
+                foreach (InventoryItem item in lootedItems)
                 {
                     _player.AddItemToInventory(item.Details);
                     var name = item.Quantity == 1 ? item.Details.Name : item.Details.NamePlural;
@@ -140,14 +144,11 @@ namespace SimpleRPG
             RefreshAll();
 
             // Remove potion
-            foreach (InventoryItem item in _player.Inventory)
+            foreach (InventoryItem item in _player.Inventory.Where(item => item.Details.Id == potion.Id))
             {
-                if(item.Details.Id == potion.Id)
-                {
-                    item.Quantity--;
-                    break;
-                }
 
+                item.Quantity--;
+                break;
             }
             // Display mesage
             rtbMessages.Text += "You drink a " + potion.Name + Environment.NewLine;
@@ -219,7 +220,7 @@ namespace SimpleRPG
                             _player.AddItemToInventory(questInCurrentLocation.RewardItem);
 
                             // Mark the quest as completed
-                            _player.MarkQuestCompleted( questInCurrentLocation);
+                            _player.MarkQuestCompleted(questInCurrentLocation);
                         }
                     }
                 }
@@ -235,7 +236,7 @@ namespace SimpleRPG
                     {
                         string name = questItem.Quantity == 1 ? questItem.Details.Name : questItem.Details.NamePlural;
                         rtbMessages.Text += questItem.Quantity.ToString() + " " + name + Environment.NewLine;
-                        
+
                     }
                     rtbMessages.Text += Environment.NewLine;
                     ScrollToBottomOfMessages();
@@ -254,7 +255,7 @@ namespace SimpleRPG
                 // Make a new monster, using the values from the standard monster in the World.Monster list
                 Monster monster = World.MonsterByID(newLocation.MonsterLivingHere.Id);
 
-                _currentMonster = new Monster(monster.Id, monster.Name, monster.MaximumDamage,monster.RewardExperiencePoints,
+                _currentMonster = new Monster(monster.Id, monster.Name, monster.MaximumDamage, monster.RewardExperiencePoints,
                     monster.RewardGold, monster.CurrentHitPoints, monster.MaximumHitPoints);
 
                 foreach (LootItem lootItem in monster.LootTable)
@@ -343,8 +344,8 @@ namespace SimpleRPG
         {
             List<HealingPotion> healingPotions = new List<HealingPotion>();
 
-            foreach (InventoryItem inventoryItem in _player.Inventory.Where(item => 
-            item.Details is HealingPotion && item.Quantity >0))
+            foreach (InventoryItem inventoryItem in _player.Inventory.Where(item =>
+            item.Details is HealingPotion && item.Quantity > 0))
             {
                 healingPotions.Add((HealingPotion)inventoryItem.Details);
             }
@@ -434,6 +435,11 @@ namespace SimpleRPG
         {
             rtbMessages.SelectionStart = rtbMessages.Text.Length;
             rtbMessages.ScrollToCaret();
+        }
+
+        private void SimpleRPG_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            File.WriteAllText(PLAYER_DATA_FILE_NAME, _player.ToXmlString());
         }
     }
 }
