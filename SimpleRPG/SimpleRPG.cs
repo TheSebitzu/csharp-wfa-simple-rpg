@@ -76,7 +76,7 @@ namespace SimpleRPG
                 rtbMessages.Text += "You defeated the " + _currentMonster.Name + Environment.NewLine;
 
                 // Give gold and xp
-                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+                _player.AddExperiencePoints(_currentMonster.RewardExperiencePoints);
                 _player.Gold += _currentMonster.RewardGold;
                 RefreshAll();
 
@@ -379,7 +379,7 @@ namespace SimpleRPG
             rtbMessages.Text += Environment.NewLine;
             ScrollToBottomOfMessages();
 
-            _player.ExperiencePoints += quest.RewardExperiencePoints;
+            _player.AddExperiencePoints(quest.RewardExperiencePoints);
             _player.Gold += quest.RewardGold;
             RefreshAll();
         }

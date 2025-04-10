@@ -271,8 +271,14 @@ namespace Engine
             return playerDataDocument.InnerXml;
         }
 
+        public void AddExperiencePoints(int experiencePointsToAdd)
+        {
+            ExperiencePoints += experiencePointsToAdd;
+            MaximumHitPoints = 5 + Level * 5;
+        }
+
         public int Gold { get; set; }
-        public int ExperiencePoints { get; set; }
+        public int ExperiencePoints { get; private set; }
 
         public int Level
         {
