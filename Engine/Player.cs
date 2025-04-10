@@ -53,6 +53,14 @@ namespace Engine
                     SelectSingleNode("/Player/Stats/CurrentLocation").InnerText);
                 player.CurrentLocation = World.LocationByID(currentLocationID);
 
+                // Add weapon
+                if (playerDataDocument.SelectSingleNode("/Player/Stats/CurrentWeapon") != null)
+                {
+                    int currentWeaponId = Convert.ToInt32(playerDataDocument.
+                        SelectSingleNode("/Player/Stats/CurrentWeapon").InnerText);
+                    player.CurrentWeapon = (Weapon)World.ItemByID(currentWeaponId);
+                }
+
                 // Add items to inventoy
                 foreach (XmlNode node in playerDataDocument.SelectNodes("/Player/InventoryItems/InventoryItem"))
                 {
@@ -253,6 +261,13 @@ namespace Engine
                 playerQuests.AppendChild(playerQuest);
             }
 
+            if (CurrentWeapon != null)
+            {
+                XmlNode currentWeapon = playerDataDocument.CreateElement("CurrentWeapon");
+                currentWeapon.AppendChild(playerDataDocument.CreateTextNode(this.CurrentWeapon.Id.ToString()));
+                stats.AppendChild(currentWeapon);
+            }
+
             return playerDataDocument.InnerXml;
         }
 
@@ -267,5 +282,6 @@ namespace Engine
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
         public Location CurrentLocation { get; set; }
+        public Weapon CurrentWeapon { get; set; }
     }
 }

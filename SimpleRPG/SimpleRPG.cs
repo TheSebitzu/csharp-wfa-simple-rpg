@@ -313,15 +313,10 @@ namespace SimpleRPG
         {
             List<Weapon> weapons = new List<Weapon>();
 
-            foreach (InventoryItem inventoryItem in _player.Inventory)
+            foreach (InventoryItem inventoryItem in _player.Inventory.
+                Where(item => item.Details is Weapon && item.Quantity > 0))
             {
-                if (inventoryItem.Details is Weapon)
-                {
-                    if (inventoryItem.Quantity > 0)
-                    {
-                        weapons.Add((Weapon)inventoryItem.Details);
-                    }
-                }
+                weapons.Add((Weapon)inventoryItem.Details);
             }
 
             if (weapons.Count == 0)
@@ -332,11 +327,20 @@ namespace SimpleRPG
             }
             else
             {
+                cboWeapons.SelectedIndexChanged -= cboWeapons_SelectedIndexChanged;
                 cboWeapons.DataSource = weapons;
+                cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
                 cboWeapons.DisplayMember = "Name";
-                cboWeapons.ValueMember = "ID";
+                cboWeapons.ValueMember = "Id";
 
-                cboWeapons.SelectedIndex = 0;
+                if (_player.CurrentWeapon != null)
+                {
+                    cboWeapons.SelectedItem = _player.CurrentWeapon;
+                }
+                else
+                {
+                    cboWeapons.SelectedIndex = 0;
+                }
             }
         }
 
@@ -386,6 +390,7 @@ namespace SimpleRPG
             cboPotions.Visible = state;
             btnUseWeapons.Visible = state;
             btnUsePotions.Visible = state;
+            lblSelectAction.Visible = state;
         }
 
         private void RefreshAll()
@@ -440,6 +445,10 @@ namespace SimpleRPG
         private void SimpleRPG_FormClosing(object sender, FormClosingEventArgs e)
         {
             File.WriteAllText(PLAYER_DATA_FILE_NAME, _player.ToXmlString());
+        }
+        private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _player.CurrentWeapon = (Weapon)cboWeapons.SelectedItem;
         }
     }
 }

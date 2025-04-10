@@ -36,7 +36,7 @@
             this.lblGold = new System.Windows.Forms.Label();
             this.lblHitPoints = new System.Windows.Forms.Label();
             this.lblExperience = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lblSelectAction = new System.Windows.Forms.Label();
             this.cboWeapons = new System.Windows.Forms.ComboBox();
             this.cboPotions = new System.Windows.Forms.ComboBox();
             this.btnUseWeapons = new System.Windows.Forms.Button();
@@ -121,17 +121,18 @@
             this.lblExperience.Size = new System.Drawing.Size(0, 16);
             this.lblExperience.TabIndex = 7;
             // 
-            // label5
+            // lblSelectAction
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(617, 531);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 16);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Select action";
+            this.lblSelectAction.AutoSize = true;
+            this.lblSelectAction.Location = new System.Drawing.Point(617, 531);
+            this.lblSelectAction.Name = "lblSelectAction";
+            this.lblSelectAction.Size = new System.Drawing.Size(84, 16);
+            this.lblSelectAction.TabIndex = 8;
+            this.lblSelectAction.Text = "Select action";
             // 
             // cboWeapons
             // 
+            this.cboWeapons.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboWeapons.FormattingEnabled = true;
             this.cboWeapons.Location = new System.Drawing.Point(369, 559);
             this.cboWeapons.Name = "cboWeapons";
@@ -140,6 +141,7 @@
             // 
             // cboPotions
             // 
+            this.cboPotions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPotions.FormattingEnabled = true;
             this.cboPotions.Location = new System.Drawing.Point(369, 593);
             this.cboPotions.Name = "cboPotions";
@@ -278,7 +280,7 @@
             this.Controls.Add(this.btnUseWeapons);
             this.Controls.Add(this.cboPotions);
             this.Controls.Add(this.cboWeapons);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lblSelectAction);
             this.Controls.Add(this.lblExperience);
             this.Controls.Add(this.lblHitPoints);
             this.Controls.Add(this.lblGold);
@@ -307,7 +309,7 @@
         private System.Windows.Forms.Label lblGold;
         private System.Windows.Forms.Label lblHitPoints;
         private System.Windows.Forms.Label lblExperience;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblSelectAction;
         private System.Windows.Forms.ComboBox cboWeapons;
         private System.Windows.Forms.ComboBox cboPotions;
         private System.Windows.Forms.Button btnUseWeapons;
