@@ -128,6 +128,9 @@ namespace SimpleRPG
                 rtbLocation.Text = _player.CurrentLocation.Name + Environment.NewLine;
                 rtbLocation.Text += _player.CurrentLocation.Description + Environment.NewLine;
 
+                // Trade button visibility
+                btnTrade.Visible = (_player.CurrentLocation.VendorWorkingHere != null);
+
                 if (_player.CurrentLocation.MonsterLivingHere == null)
                 {
                     cboWeapons.Visible = false;
@@ -181,6 +184,13 @@ namespace SimpleRPG
             HealingPotion potion = (HealingPotion)cboPotions.SelectedItem;
 
             _player.UsePotion(potion);
+        }
+
+        private void btnTrade_Click(object sender, EventArgs e)
+        {
+            TradingScreen tradingScreen = new TradingScreen(_player);
+            tradingScreen.StartPosition = FormStartPosition.CenterParent;
+            tradingScreen.ShowDialog(this);
         }
 
         private void SimpleRPG_FormClosing(object sender, FormClosingEventArgs e)

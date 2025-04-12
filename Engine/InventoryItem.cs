@@ -4,7 +4,14 @@ namespace Engine
 {
     public class InventoryItem : INotifyPropertyChanged
     {
-        // Constructor
+        public int ItemId
+        {
+            get { return Details.Id; }
+        }
+        public int Price
+        {
+            get { return Details.Price; }
+        }
         public InventoryItem(Item details, int quantity)
         {
             Details = details;

@@ -17,6 +17,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public Vendor VendorWorkingHere { get; set; }
         public Item ItemRequiredToEnter { get; set; }
         public Quest QuestAvailableHere { get; set; }
         public Monster MonsterLivingHere { get; set; }
