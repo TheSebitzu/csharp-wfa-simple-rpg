@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Engine
 {
@@ -53,6 +54,7 @@ namespace Engine
 
         public Weapon CurrentWeapon { get; set; }
 
+        public List<int> LocationsVisited { get; set; }
         public BindingList<InventoryItem> Inventory { get; set; }
 
         public List<Weapon> Weapons
@@ -83,6 +85,9 @@ namespace Engine
 
             Inventory = new BindingList<InventoryItem>();
             Quests = new BindingList<PlayerQuest>();
+
+            LocationsVisited = new List<int>();
+
         }
 
         public static Player CreateDefaultPlayer()
@@ -90,6 +95,10 @@ namespace Engine
             Player player = new Player(10, 10, 20, 0);
             player.Inventory.Add(new InventoryItem(World.ItemByID(World.ITEM_ID_RUSTY_SWORD), 1));
             player.CurrentLocation = World.LocationByID(World.LOCATION_ID_HOME);
+            if (!player.LocationsVisited.Contains(player.CurrentLocation.Id))
+            {
+                player.LocationsVisited.Add(player.CurrentLocation.Id);
+            }
             return player;
         }
 
@@ -132,6 +141,16 @@ namespace Engine
                     int currentWeaponId = Convert.ToInt32(playerDataDocument.
                         SelectSingleNode("/Player/Stats/CurrentWeapon").InnerText);
                     player.CurrentWeapon = (Weapon)World.ItemByID(currentWeaponId);
+                }
+
+                foreach (XmlNode node in playerDataDocument.SelectNodes("/Player/LocationsVisited/LocationVisited"))
+                {
+                    int id = Convert.ToInt32(node.Attributes["Id"].Value);
+                    player.LocationsVisited.Add(id);
+                }
+                if (!player.LocationsVisited.Contains(player.CurrentLocation.Id))
+                {
+                    player.LocationsVisited.Add(player.CurrentLocation.Id);
                 }
 
                 // Add items to inventoy
@@ -300,6 +319,11 @@ namespace Engine
             {
                 RaiseMessage("You must have a " + newLocation.ItemRequiredToEnter.Name + " to enter this location.");
                 return;
+            }
+
+            if (!LocationsVisited.Contains(CurrentLocation.Id))
+            {
+                LocationsVisited.Add(CurrentLocation.Id);
             }
 
             // Update the player's current location
@@ -545,7 +569,6 @@ namespace Engine
             }
         }
 
-
         public string ToXmlString()
         {
             XmlDocument playerDataDocument = new XmlDocument();
@@ -582,6 +605,21 @@ namespace Engine
             XmlNode currentLocation = playerDataDocument.CreateElement("CurrentLocation");
             currentLocation.AppendChild(playerDataDocument.CreateTextNode(this.CurrentLocation.Id.ToString()));
             stats.AppendChild(currentLocation);
+
+            // Create the "LocationsVisited" child node to hold each LocationVisited node
+            XmlNode locationsVisited = playerDataDocument.CreateElement("LocationsVisited");
+            player.AppendChild(locationsVisited);
+            // Create an "LocationVisited" node for each item in the player's inventory
+            foreach (int locationID in LocationsVisited)
+            {
+                XmlNode locationVisited = playerDataDocument.CreateElement("LocationVisited");
+
+                XmlAttribute id = playerDataDocument.CreateAttribute("Id");
+                id.Value = locationID.ToString();
+                locationVisited.Attributes.Append(id);
+
+                locationsVisited.AppendChild(locationVisited);
+            }
 
             // Add weapon to xml
             if (CurrentWeapon != null)
